@@ -37,8 +37,8 @@ class Stopt < Formula
       int main() { StOpt::SDDPACut cut; return 0; }
     CPP
     system ENV.cxx, "-std=c++17", "test.cpp", "-o", "test",
-           "-I#{include}", "-I#{Formula["eigen"].opt_include}/eigen3",
-           "-I#{Formula["boost"].opt_include}",
+           "-I#{include}", "-I#{formula_opt_include("eigen")}/eigen3",
+           "-I#{formula_opt_include("boost")}",
            "-L#{lib}", "-lStOpt"
     system "./test"
   end

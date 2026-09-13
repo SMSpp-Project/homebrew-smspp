@@ -46,11 +46,11 @@ class Smspp < Formula
       -DCMAKE_DISABLE_FIND_PACKAGE_SCIP=ON
       -DCMAKE_DISABLE_FIND_PACKAGE_PIPS=ON
       -DCMAKE_DISABLE_FIND_PACKAGE_Torch=ON
-      -DHiGHS_ROOT=#{Formula["highs"].opt_prefix}
-      -DStOpt_ROOT=#{Formula["stopt"].opt_prefix}
-      -DCoinUtils_ROOT=#{Formula["coinutils"].opt_prefix}
-      -DOsi_ROOT=#{Formula["osi"].opt_prefix}
-      -DClp_ROOT=#{Formula["clp"].opt_prefix}
+      -DHiGHS_ROOT=#{formula_opt_prefix("highs")}
+      -DStOpt_ROOT=#{formula_opt_prefix("stopt")}
+      -DCoinUtils_ROOT=#{formula_opt_prefix("coinutils")}
+      -DOsi_ROOT=#{formula_opt_prefix("osi")}
+      -DClp_ROOT=#{formula_opt_prefix("clp")}
     ]
 
     # the umbrella forces shared libraries and a package registry of its own
