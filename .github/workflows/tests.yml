@@ -35,7 +35,7 @@ jobs:
 
       - name: the formula is built and its bottle is made
         if: github.event_name == 'pull_request'
-        working-directory: ${{ steps.set-up-homebrew.outputs.testbot-root }}
+        working-directory: ${{ runner.temp }}
         run: brew test-bot --only-formulae --root-url=https://ghcr.io/v2/smspp-project/smspp
 
       - name: the bottle travels to the job that publishes it
@@ -43,5 +43,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: bottles_${{ matrix.os }}
-          path: ${{ steps.set-up-homebrew.outputs.testbot-root }}/*.bottle.*
+          path: ${{ runner.temp }}/*.bottle.*
           if-no-files-found: ignore
