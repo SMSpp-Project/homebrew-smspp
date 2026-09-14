@@ -19,7 +19,7 @@ class Smspp < Formula
   depends_on "open-mpi"
   depends_on "openblas"
   depends_on "osi"
-  depends_on "smspp/smspp/stopt"
+  depends_on "smspp-project/smspp/stopt"
 
   # the core fetches FastFlow at configure time, which a formula must not do:
   # it is given here instead, at the commit the other packages of the project
