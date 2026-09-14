@@ -5,6 +5,12 @@ class Smspp < Formula
   sha256 "35a08948bc4d9570076efbfd2d053e62269de456cd6325abc145bbb0947c1ad8"
   license "LGPL-3.0-only"
 
+  bottle do
+    root_url "https://ghcr.io/v2/smspp-project/smspp"
+    sha256 cellar: :any, arm64_sequoia: "7c5c610c66f23328938cbb2b07ab28bb2a917448055a427087edb817df5a8c3b"
+    sha256 cellar: :any, x86_64_linux:  "ad6d908e0133954666d0ba320942ee09cc91db7dfcb89df7cb3dbc9fd6710c93"
+  end
+
   depends_on "cmake" => :build
   depends_on "help2man" => :build
   depends_on "pkgconf" => :build
