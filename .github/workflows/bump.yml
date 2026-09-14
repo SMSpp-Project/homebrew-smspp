@@ -1,6 +1,8 @@
 # The tap follows the releases of the project by itself: every day, and on
 # request, it reads the last release of the umbrella, and if the formula is
-# behind it builds it, tests it and pushes the new version.
+# behind it opens the pull request that moves it. From there brew test-bot
+# builds and bottles it on the three platforms, and publish.yml uploads the
+# bottles and pushes the formula onto master.
 
 name: bump
 
@@ -15,10 +17,12 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   bump:
-    runs-on: macos-15
+    # it only edits the formula now, the building is the pull request's job
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
@@ -41,7 +45,7 @@ jobs:
           v=${{ steps.release.outputs.version }}
           url="https://gitlab.com/api/v4/projects/smspp%2Fsmspp-project/packages/generic/smspp-project/$v/smspp-project-$v.tar.gz"
           curl -fsSL -o tarball "$url"
-          sha=$(shasum -a 256 tarball | cut -d' ' -f1)
+          sha=$(sha256sum tarball | cut -d' ' -f1)
           rm tarball
           python3 - "$v" "$sha" <<'PY'
           import re, sys
@@ -56,18 +60,22 @@ jobs:
           PY
           git diff --stat
 
-      - name: it builds and it runs
+      - name: and the pull request that carries it is opened
         if: steps.release.outputs.behind == 'yes'
-        run: |
-          brew tap SMSpp-Project/smspp "$PWD"
-          brew install --build-from-source SMSpp-Project/smspp/smspp
-          brew test SMSpp-Project/smspp/smspp
-
-      - name: and then it is pushed
-        if: steps.release.outputs.behind == 'yes'
+        env:
+          # the token of the user, and not the one of the job, so that the
+          # pull request triggers brew test-bot: what GITHUB_TOKEN opens does
+          # not start any workflow
+          GH_TOKEN: ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}
+          V: ${{ steps.release.outputs.version }}
         run: |
           git config user.name "Donato Meoli"
           git config user.email "donato.meoli.95@gmail.com"
+          git checkout -b "smspp-$V"
           git add Formula/smspp.rb
-          git commit -m "smspp ${{ steps.release.outputs.version }}"
-          git push origin HEAD:master
+          git commit -m "smspp $V"
+          git push -f origin "HEAD:smspp-$V"
+          gh pr create --repo "$GITHUB_REPOSITORY" --base master \
+              --head "smspp-$V" --title "smspp $V" \
+              --body "The release $V of the umbrella. The bottles come from brew test-bot and are published by publish.yml." \
+              || gh pr list --repo "$GITHUB_REPOSITORY" --head "smspp-$V"
