@@ -21,9 +21,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # macos-14 is a Tier 3 configuration for Homebrew now: there are no
-        # bottles for it even among the dependencies, so nothing can be built
-        os: [macos-15, macos-15-intel, ubuntu-24.04]
+        # Homebrew keeps bottles for the dependencies only on arm64 macOS
+        # and x86_64 Linux: macos-14 and macos-15-intel are Tier 3, where not
+        # even the dependencies can be poured, so nothing builds there
+        os: [macos-15, ubuntu-24.04]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Set up Homebrew
