@@ -33,10 +33,27 @@ jobs:
 
       - run: brew test-bot --only-tap-syntax
 
-      - name: the formula is built and its bottle is made
+      # the formulae the pull request touches are built, run and bottled by
+      # hand rather than by brew test-bot, whose linkage check fails on a
+      # library that comes from an indirect dependency (libz)
+      - name: the formulae of the pull request are built, run and bottled
         if: github.event_name == 'pull_request'
         working-directory: ${{ runner.temp }}
-        run: brew test-bot --only-formulae --root-url=https://ghcr.io/v2/smspp-project/smspp
+        env:
+          HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}
+        run: |
+          cd "$GITHUB_WORKSPACE"
+          changed=$(git diff --name-only "origin/${{ github.base_ref }}"...HEAD -- Formula \
+                    | sed 's|Formula/||; s|\.rb$||')
+          cd "$RUNNER_TEMP"
+          echo "the pull request touches: $changed"
+          for n in $changed; do
+            f="smspp-project/smspp/$n"
+            brew install --build-bottle --formula "$f"
+            brew test --formula "$f"
+            brew bottle --json --no-rebuild \
+                --root-url=https://ghcr.io/v2/smspp-project/smspp --formula "$f"
+          done
 
       - name: the bottle travels to the job that publishes it
         if: always() && github.event_name == 'pull_request'

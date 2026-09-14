@@ -28,13 +28,19 @@ jobs:
         id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@main
 
-      - name: it is built and bottled
+      # not brew test-bot: its linkage check fails on a library that comes
+      # from an indirect dependency (libz, which on Linux is provided by
+      # zlib-ng-compat), and that would throw away a bottle that is good
+      - name: it is built, it runs and it is bottled
         working-directory: ${{ runner.temp }}
         env:
           HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}
         run: |
-          brew test-bot --only-formulae --root-url=https://ghcr.io/v2/smspp-project/smspp \
-              "smspp-project/smspp/${{ inputs.formula }}"
+          f="smspp-project/smspp/${{ inputs.formula }}"
+          brew install --build-bottle --formula "$f"
+          brew test --formula "$f"
+          brew bottle --json --no-rebuild \
+              --root-url=https://ghcr.io/v2/smspp-project/smspp --formula "$f"
 
       - name: the bottle travels to the job that publishes it
         if: always()
