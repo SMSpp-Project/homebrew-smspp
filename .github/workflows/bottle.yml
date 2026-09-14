@@ -38,9 +38,9 @@ jobs:
         run: |
           f="smspp-project/smspp/${{ inputs.formula }}"
           brew install --build-bottle --formula "$f"
-          brew test --formula "$f"
+          brew test "$f"
           brew bottle --json --no-rebuild \
-              --root-url=https://ghcr.io/v2/smspp-project/smspp --formula "$f"
+              --root-url=https://ghcr.io/v2/smspp-project/smspp "$f"
 
       - name: the bottle travels to the job that publishes it
         if: always()

@@ -50,9 +50,9 @@ jobs:
           for n in $changed; do
             f="smspp-project/smspp/$n"
             brew install --build-bottle --formula "$f"
-            brew test --formula "$f"
+            brew test "$f"
             brew bottle --json --no-rebuild \
-                --root-url=https://ghcr.io/v2/smspp-project/smspp --formula "$f"
+                --root-url=https://ghcr.io/v2/smspp-project/smspp "$f"
           done
 
       - name: the bottle travels to the job that publishes it
