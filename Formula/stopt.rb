@@ -7,6 +7,7 @@ class Stopt < Formula
 
   depends_on "cmake" => :build
   depends_on "boost"
+  depends_on "boost-mpi"
   depends_on "eigen"
   depends_on "open-mpi"
 
