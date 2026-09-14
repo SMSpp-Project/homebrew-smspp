@@ -5,6 +5,12 @@ class Stopt < Formula
   sha256 "8bee8f2aab097c91a791729cde34f50b062208a1ab1af4d62ee41dba24a9e5e7"
   license "LGPL-3.0-only"
 
+  bottle do
+    root_url "https://ghcr.io/v2/smspp-project/smspp"
+    sha256 cellar: :any, arm64_sequoia: "ed9f93a8bb8cb1898396bc9f8d3084301d8067bb8d8bd95b3acdc63477c1285f"
+    sha256 cellar: :any, x86_64_linux:  "d08bde06aaaf1522a03c3d650e3237aac9fe205213dbb3b4f9cbf535b4d1ddc1"
+  end
+
   depends_on "cmake" => :build
   depends_on "boost"
   depends_on "boost-mpi"
