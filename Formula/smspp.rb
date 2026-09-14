@@ -1,8 +1,8 @@
 class Smspp < Formula
   desc "Framework to model and solve block-structured optimization problems"
   homepage "https://smspp.gitlab.io/"
-  url "https://gitlab.com/api/v4/projects/smspp%2Fsmspp-project/packages/generic/smspp-project/0.6.2/smspp-project-0.6.2.tar.gz"
-  sha256 "f34e324955a1585b0e9ed11b07f167073ffe4cc3ef0bb220489155fd521a566d"
+  url "https://gitlab.com/api/v4/projects/smspp%2Fsmspp-project/packages/generic/smspp-project/0.6.3/smspp-project-0.6.3.tar.gz"
+  sha256 "35a08948bc4d9570076efbfd2d053e62269de456cd6325abc145bbb0947c1ad8"
   license "LGPL-3.0-only"
 
   depends_on "cmake" => :build
@@ -80,6 +80,13 @@ class Smspp < Formula
       find_package(UCBlock REQUIRED)
       add_executable(consumer consumer.cpp)
       target_link_libraries(consumer PRIVATE SMS++::SMS++ SMS++::UCBlock)
+      # the registration in the factory happens in a static initialiser, and
+      # the ELF linker drops a library from which no symbol is referenced:
+      # until the modules export the reference themselves, the consumer asks
+      # for the library to be kept
+      if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+          target_link_options(consumer PRIVATE "LINKER:--no-as-needed")
+      endif ()
     CMAKE
     (testpath/"consumer.cpp").write <<~CPP
       #include <UCBlock.h>
