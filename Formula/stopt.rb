@@ -17,14 +17,18 @@ class Stopt < Formula
   def install
     # the geners serialization library travels inside StOpt and is built with
     # it; the SDDP and DP CUTS switches build tests, not the library, and the
-    # MPI one defines USE_MPI, which the parallel entry points need
-    args = %w[
+    # MPI one defines USE_MPI, which the parallel entry points need. libStOpt
+    # reaches libgeners through @rpath, so the directory of the library has
+    # to be written into it, or nothing that links StOpt can be loaded
+    args = %W[
       -DBUILD_PYTHON=OFF
       -DBUILD_TEST=OFF
       -DBUILD_SDDP=OFF
       -DBUILD_DPCUTS=OFF
       -DBUILD_MPI=ON
       -DBUILD_SYSTEM_INSTALL=ON
+      -DCMAKE_INSTALL_RPATH=#{loader_path}
+      -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON
     ]
 
     system "cmake", "-S", ".", "-B", "build", *std_cmake_args, *args
