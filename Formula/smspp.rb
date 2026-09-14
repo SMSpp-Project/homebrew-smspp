@@ -1,8 +1,8 @@
 class Smspp < Formula
   desc "Framework to model and solve block-structured optimization problems"
   homepage "https://smspp.gitlab.io/"
-  url "https://gitlab.com/api/v4/projects/smspp%2Fsmspp-project/packages/generic/smspp-project/0.6.0/smspp-project-0.6.0.tar.gz"
-  sha256 "449e4bd652ec89370450a80505a8380551d9d90b4fbd87dbcb6d7a60a4ee2a1f"
+  url "https://gitlab.com/api/v4/projects/smspp%2Fsmspp-project/packages/generic/smspp-project/0.6.2/smspp-project-0.6.2.tar.gz"
+  sha256 "f34e324955a1585b0e9ed11b07f167073ffe4cc3ef0bb220489155fd521a566d"
   license "LGPL-3.0-only"
 
   depends_on "cmake" => :build
@@ -19,7 +19,7 @@ class Smspp < Formula
   depends_on "open-mpi"
   depends_on "openblas"
   depends_on "osi"
-  depends_on "smspp/smspp/stopt"
+  depends_on "smspp-project/smspp/stopt"
 
   # the core fetches FastFlow at configure time, which a formula must not do:
   # it is given here instead, at the commit the other packages of the project
@@ -65,12 +65,12 @@ class Smspp < Formula
     # every tool finds its configuration files next to the executable, and the
     # examples of the tools are installed with them
     examples = share/"SMS++_tools"
-    mcf = shell_output("#{bin}/mcfblock_solver #{examples}/mcfblock_solver/examples/example.dmx")
+    mcf = shell_output("#{bin}/smspp_mcfblock_solver #{examples}/mcfblock_solver/examples/example.dmx")
     assert_match "Upper bound = 1.40000000e+01", mcf
-    bkb = shell_output("#{bin}/bkblock_solver #{examples}/bkblock_solver/examples/example.txt")
+    bkb = shell_output("#{bin}/smspp_bkblock_solver #{examples}/bkblock_solver/examples/example.txt")
     assert_match "Upper bound = 1.50000000e+01", bkb
-    system bin/"ucblock_solver", "--version"
-    system bin/"block_solver", "--help"
+    system bin/"smspp_ucblock_solver", "--version"
+    system bin/"smspp_block_solver", "--help"
 
     (testpath/"CMakeLists.txt").write <<~CMAKE
       cmake_minimum_required(VERSION 3.21)

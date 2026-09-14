@@ -1,0 +1,73 @@
+# The tap follows the releases of the project by itself: every day, and on
+# request, it reads the last release of the umbrella, and if the formula is
+# behind it builds it, tests it and pushes the new version.
+
+name: bump
+
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: the version to move to, or nothing for the last release
+        required: false
+
+permissions:
+  contents: write
+
+jobs:
+  bump:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: the version and the tarball of the release
+        id: release
+        run: |
+          v="${{ inputs.version }}"
+          if [ -z "$v" ]; then
+            v=$(curl -fsSL "https://gitlab.com/api/v4/projects/smspp%2Fsmspp-project/releases" \
+                | python3 -c "import json,sys; print(json.load(sys.stdin)[0]['tag_name'])")
+          fi
+          have=$(grep -o 'smspp-project/[0-9.]*/smspp-project' Formula/smspp.rb | cut -d/ -f2)
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+          echo "behind=$([ "$v" != "$have" ] && echo yes || echo no)" >> "$GITHUB_OUTPUT"
+          echo "the tap is at $have, the project at $v"
+
+      - name: the formula moves to it
+        if: steps.release.outputs.behind == 'yes'
+        run: |
+          v=${{ steps.release.outputs.version }}
+          url="https://gitlab.com/api/v4/projects/smspp%2Fsmspp-project/packages/generic/smspp-project/$v/smspp-project-$v.tar.gz"
+          curl -fsSL -o tarball "$url"
+          sha=$(shasum -a 256 tarball | cut -d' ' -f1)
+          rm tarball
+          python3 - "$v" "$sha" <<'PY'
+          import re, sys
+          v, sha = sys.argv[1], sys.argv[2]
+          p = "Formula/smspp.rb"
+          s = open(p).read()
+          s = re.sub(r"smspp-project/[0-9][0-9.]*/smspp-project-[0-9][0-9.]*\.tar\.gz",
+                     f"smspp-project/{v}/smspp-project-{v}.tar.gz", s)
+          s = re.sub(r'(url "[^"]*smspp-project[^"]*"\n  sha256 ")[0-9a-f]{64}',
+                     r"\g<1>" + sha, s)
+          open(p, "w").write(s)
+          PY
+          git diff --stat
+
+      - name: it builds and it runs
+        if: steps.release.outputs.behind == 'yes'
+        run: |
+          brew tap SMSpp-Project/smspp "$PWD"
+          brew install --build-from-source SMSpp-Project/smspp/smspp
+          brew test SMSpp-Project/smspp/smspp
+
+      - name: and then it is pushed
+        if: steps.release.outputs.behind == 'yes'
+        run: |
+          git config user.name "Donato Meoli"
+          git config user.email "donato.meoli.95@gmail.com"
+          git add Formula/smspp.rb
+          git commit -m "smspp ${{ steps.release.outputs.version }}"
+          git push origin HEAD:master
