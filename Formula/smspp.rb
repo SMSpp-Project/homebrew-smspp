@@ -16,8 +16,6 @@ class Smspp < Formula
   depends_on "pkgconf" => :build
   depends_on "boost"
   depends_on "boost-mpi"
-  depends_on "clp"
-  depends_on "coinutils"
   depends_on "eigen"
   depends_on "highs"
   depends_on "liblinear"
@@ -25,7 +23,6 @@ class Smspp < Formula
   depends_on "netcdf-cxx"
   depends_on "open-mpi"
   depends_on "openblas"
-  depends_on "osi"
   depends_on "smspp-project/smspp/stopt"
 
   # the core fetches FastFlow at configure time, which a formula must not do:
@@ -55,9 +52,6 @@ class Smspp < Formula
       -DCMAKE_DISABLE_FIND_PACKAGE_Torch=ON
       -DHiGHS_ROOT=#{formula_opt_prefix("highs")}
       -DStOpt_ROOT=#{formula_opt_prefix("stopt")}
-      -DCoinUtils_ROOT=#{formula_opt_prefix("coinutils")}
-      -DOsi_ROOT=#{formula_opt_prefix("osi")}
-      -DClp_ROOT=#{formula_opt_prefix("clp")}
     ]
 
     # the umbrella forces shared libraries and a package registry of its own
@@ -86,13 +80,6 @@ class Smspp < Formula
       find_package(UCBlock REQUIRED)
       add_executable(consumer consumer.cpp)
       target_link_libraries(consumer PRIVATE SMS++::SMS++ SMS++::UCBlock)
-      # the registration in the factory happens in a static initialiser, and
-      # the ELF linker drops a library from which no symbol is referenced:
-      # until the modules export the reference themselves, the consumer asks
-      # for the library to be kept
-      if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
-          target_link_options(consumer PRIVATE "LINKER:--no-as-needed")
-      endif ()
     CMAKE
     (testpath/"consumer.cpp").write <<~CPP
       #include <UCBlock.h>
