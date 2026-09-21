@@ -22,7 +22,6 @@ class Smspp < Formula
   depends_on "libsvm"
   depends_on "netcdf-cxx"
   depends_on "open-mpi"
-  depends_on "openblas"
   depends_on "smspp-project/smspp/stopt"
 
   # the core fetches FastFlow at configure time, which a formula must not do:
