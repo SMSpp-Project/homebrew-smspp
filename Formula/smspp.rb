@@ -16,10 +16,12 @@ class Smspp < Formula
   depends_on "pkgconf" => :build
   depends_on "boost"
   depends_on "boost-mpi"
+  depends_on "cadical"
   depends_on "eigen"
   depends_on "highs"
   depends_on "liblinear"
   depends_on "libsvm"
+  depends_on "minisat"
   depends_on "netcdf-cxx"
   depends_on "open-mpi"
   depends_on "smspp-project/smspp/stopt"
@@ -51,6 +53,8 @@ class Smspp < Formula
       -DCMAKE_DISABLE_FIND_PACKAGE_Torch=ON
       -DHiGHS_ROOT=#{formula_opt_prefix("highs")}
       -DStOpt_ROOT=#{formula_opt_prefix("stopt")}
+      -DCADICAL_ROOT=#{formula_opt_prefix("cadical")}
+      -DMINISAT_ROOT=#{formula_opt_prefix("minisat")}
     ]
 
     # the umbrella forces shared libraries and a package registry of its own
