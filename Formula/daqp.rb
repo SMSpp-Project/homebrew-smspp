@@ -5,6 +5,12 @@ class Daqp < Formula
   sha256 "6105b9875100214786fce5caf2829380c3e49981757fede84e42b0008a210949"
   license "MIT"
 
+  bottle do
+    root_url "https://ghcr.io/v2/smspp-project/smspp"
+    sha256 cellar: :any, arm64_sequoia: "400dc9892b4b69ef544a9164dc9b97ef9ec9f3c3f0c6c27cae7d44e1cc7ef055"
+    sha256 cellar: :any, x86_64_linux:  "c084a16ed395e64d5e74ffb744a040bcf912d16651edeffabc81d519657e57a8"
+  end
+
   depends_on "cmake" => :build
 
   # the static library links the shared one, the shared one does not declare
