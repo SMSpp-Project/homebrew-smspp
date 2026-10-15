@@ -25,8 +25,8 @@ apt and conda: `brew install smspp` gives everything. The parts that are left
 out, and why:
 
 - CPLEX, Gurobi and SCIP are not redistributable, so the MILP Solvers come
-  with the HiGHS backend alone; a build against the others is still the one of
-  the sources;
+  with the HiGHS and DAQP backends alone; a build against the others is still
+  the one of the sources;
 
 - `MCFLemonSolver` needs the LEMON graph library, which is neither in
   homebrew-core (whose `lemon` is the parser generator of SQLite) nor packaged

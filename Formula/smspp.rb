@@ -24,6 +24,7 @@ class Smspp < Formula
   depends_on "minisat"
   depends_on "netcdf-cxx"
   depends_on "open-mpi"
+  depends_on "smspp-project/smspp/daqp"
   depends_on "smspp-project/smspp/stopt"
 
   # the core fetches FastFlow at configure time, which a formula must not do:
@@ -38,8 +39,8 @@ class Smspp < Formula
     (buildpath/"fastflow").install resource("fastflow")
 
     # CPLEX, Gurobi and SCIP are not redistributable, so the MILP Solvers come
-    # with the HiGHS backend alone; MCFLemonSolver needs the LEMON graph
-    # library, which homebrew-core does not carry
+    # with the HiGHS and DAQP backends alone; MCFLemonSolver needs the LEMON
+    # graph library, which homebrew-core does not carry
     args = %W[
       -DBUILD_SHARED_LIBS=ON
       -DBUILD_tests=OFF
@@ -52,6 +53,7 @@ class Smspp < Formula
       -DCMAKE_DISABLE_FIND_PACKAGE_PIPS=ON
       -DCMAKE_DISABLE_FIND_PACKAGE_Torch=ON
       -DHiGHS_ROOT=#{formula_opt_prefix("highs")}
+      -DDAQP_ROOT=#{formula_opt_prefix("daqp")}
       -DStOpt_ROOT=#{formula_opt_prefix("stopt")}
       -DCADICAL_ROOT=#{formula_opt_prefix("cadical")}
       -DMINISAT_ROOT=#{formula_opt_prefix("minisat")}
