@@ -5,6 +5,12 @@ class Qpoases < Formula
   sha256 "e36d795a17b067ea333793d96f17a14fb2bfbd92a4ab86c7f6f513cd9e3e640d"
   license "LGPL-2.1-or-later"
 
+  bottle do
+    root_url "https://ghcr.io/v2/smspp-project/smspp"
+    sha256 cellar: :any, arm64_sequoia: "1b8d608708cd8ad10c774a68ac140458f50a04a419d7e81dc75eac6aefed7be9"
+    sha256 cellar: :any, x86_64_linux:  "edc6c5bb641ce2f7026763926c887c0c1e0ce08fc19426ebc1776af2d461e6df"
+  end
+
   depends_on "cmake" => :build
 
   # a shared library whose own BLAS and LAPACK replacements are renamed, so
