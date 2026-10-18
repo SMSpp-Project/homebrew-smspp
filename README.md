@@ -19,6 +19,7 @@ under `share/SMS++_tools/<tool>`.
 | `smspp` | the whole framework: the core, its Blocks and Solvers, and the tools |
 | `stopt` | StOpt, the stochastic optimization library that SDDPBlock and InvestmentBlock use, with the geners serialization library it carries |
 | `daqp` | DAQP, the dual active-set solver of convex quadratic programs that `DAQPMILPSolver` of MILPSolver uses |
+| `qpoases` | qpOASES, the online active-set solver of convex quadratic programs that `QPOASESMILPSolver` of MILPSolver uses |
 
 Homebrew installs one keg per formula, so there is no split per module as on
 apt and conda: `brew install smspp` gives everything. The parts that are left
