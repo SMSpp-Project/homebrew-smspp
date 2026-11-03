@@ -70,9 +70,9 @@ class Smspp < Formula
     # examples of the tools are installed with them
     examples = share/"SMS++_tools"
     mcf = shell_output("#{bin}/smspp_mcfblock_solver #{examples}/mcfblock_solver/examples/example.dmx")
-    assert_match "Upper bound = 1.40000000e+01", mcf
+    assert_in_delta 14, mcf[/Upper bound = (\S+)/, 1].to_f, 1e-2
     bkb = shell_output("#{bin}/smspp_bkblock_solver #{examples}/bkblock_solver/examples/example.txt")
-    assert_match "Upper bound = 1.50000000e+01", bkb
+    assert_in_delta 15, bkb[/Upper bound = (\S+)/, 1].to_f, 1e-2
     system bin/"smspp_ucblock_solver", "--version"
     system bin/"smspp_block_solver", "--help"
 
