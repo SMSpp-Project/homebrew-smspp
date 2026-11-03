@@ -28,17 +28,7 @@ class Smspp < Formula
   depends_on "smspp-project/smspp/qpoases"
   depends_on "smspp-project/smspp/stopt"
 
-  # the core fetches FastFlow at configure time, which a formula must not do:
-  # it is given here instead, at the commit the other packages of the project
-  # pin too
-  resource "fastflow" do
-    url "https://github.com/fastflow/fastflow/archive/d476f66ab924d8d122f54b4b90aee00ef979aea8.tar.gz"
-    sha256 "fca23ce672fe12fe7cdbfa6955a982d6eb75816a00d2d97a93deba9b351f9c53"
-  end
-
   def install
-    (buildpath/"fastflow").install resource("fastflow")
-
     # CPLEX, Gurobi, SCIP and MOSEK are not redistributable, and the C
     # interface of Clarabel is in no formula, so the MILP Solvers come with
     # the HiGHS, DAQP and qpOASES backends alone; MCFLemonSolver needs the
@@ -47,7 +37,6 @@ class Smspp < Formula
       -DBUILD_SHARED_LIBS=ON
       -DBUILD_tests=OFF
       -DBUILD_MCFLemonSolver=OFF
-      -DFETCHCONTENT_SOURCE_DIR_FASTFLOW=#{buildpath}/fastflow
       -DFETCHCONTENT_FULLY_DISCONNECTED=ON
       -DCMAKE_DISABLE_FIND_PACKAGE_CPLEX=ON
       -DCMAKE_DISABLE_FIND_PACKAGE_GUROBI=ON
