@@ -7,8 +7,8 @@ class Smspp < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/smspp-project/smspp"
-    sha256 cellar: :any, arm64_sequoia: "7d31cb3e58c270a79e2d047e797239dcff7a2e4b0242435b6813d4a38d278f0c"
-    sha256 cellar: :any, x86_64_linux:  "c76a3af5c18b6a68a6acf88d444b6219cfc86450025af073362c0edb7610b366"
+    sha256 cellar: :any, arm64_sequoia: "c57e467e963e6eb1efdae43242a7ab6fcb43d2171f9f3d7edf0a18271d56cdb8"
+    sha256 cellar: :any, x86_64_linux:  "7a6e339393f5a976ef65bf4e459d3cb6b8b36ad3ca9b36189d295795fa07bfc1"
   end
 
   depends_on "cmake" => :build
