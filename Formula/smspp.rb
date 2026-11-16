@@ -24,6 +24,7 @@ class Smspp < Formula
   depends_on "minisat"
   depends_on "netcdf-cxx"
   depends_on "open-mpi"
+  depends_on "dmeoli/ablemon/ablemon"
   depends_on "smspp-project/smspp/daqp"
   depends_on "smspp-project/smspp/qpoases"
   depends_on "smspp-project/smspp/stopt"
@@ -31,12 +32,11 @@ class Smspp < Formula
   def install
     # CPLEX, Gurobi, SCIP and MOSEK are not redistributable, and the C
     # interface of Clarabel is in no formula, so the MILP Solvers come with
-    # the HiGHS, DAQP and qpOASES backends alone; MCFLemonSolver needs the
-    # LEMON graph library, which homebrew-core does not carry
+    # the HiGHS, DAQP and qpOASES backends alone; MCFLemonSolver takes
+    # abLEMON, the maintained fork of LEMON, from its own tap
     args = %W[
       -DBUILD_SHARED_LIBS=ON
       -DBUILD_tests=OFF
-      -DBUILD_MCFLemonSolver=OFF
       -DFETCHCONTENT_FULLY_DISCONNECTED=ON
       -DCMAKE_DISABLE_FIND_PACKAGE_CPLEX=ON
       -DCMAKE_DISABLE_FIND_PACKAGE_GUROBI=ON
@@ -51,6 +51,7 @@ class Smspp < Formula
       -DStOpt_ROOT=#{formula_opt_prefix("stopt")}
       -DCADICAL_ROOT=#{formula_opt_prefix("cadical")}
       -DMINISAT_ROOT=#{formula_opt_prefix("minisat")}
+      -DLEMON_ROOT=#{formula_opt_prefix("ablemon")}
     ]
 
     # the umbrella forces shared libraries and a package registry of its own
@@ -71,6 +72,7 @@ class Smspp < Formula
     assert_in_delta 15, bkb[/Upper bound = (\S+)/, 1].to_f, 1e-2
     system bin/"smspp_ucblock_solver", "--version"
     system bin/"smspp_block_solver", "--help"
+    assert_path_exists lib/shared_library("libMCFLemonSolver")
 
     (testpath/"CMakeLists.txt").write <<~CMAKE
       cmake_minimum_required(VERSION 3.21)
