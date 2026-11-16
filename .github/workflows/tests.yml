@@ -51,9 +51,12 @@ jobs:
           cd "$RUNNER_TEMP"
           echo "the pull request touches: $changed"
           # brew loads the formulae of a trusted tap only, so the tap of abLEMON
-          # is tapped and trusted here
+          # is tapped and trusted here, and abLEMON, which has no bottle, is built
+          # from source before --build-bottle asks for the bottles of the
+          # dependencies
           brew tap dmeoli/ablemon
           brew trust dmeoli/ablemon
+          brew install --build-from-source dmeoli/ablemon/ablemon
           for n in $changed; do
             f="smspp-project/smspp/$n"
             brew install --build-bottle --formula "$f"
