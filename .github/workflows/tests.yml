@@ -50,9 +50,10 @@ jobs:
                     | sed 's|Formula/||; s|\.rb$||')
           cd "$RUNNER_TEMP"
           echo "the pull request touches: $changed"
-          # brew taps by itself only the trusted taps, so the one of abLEMON is
-          # tapped here
+          # brew loads the formulae of a trusted tap only, so the tap of abLEMON
+          # is tapped and trusted here
           brew tap dmeoli/ablemon
+          brew trust dmeoli/ablemon
           for n in $changed; do
             f="smspp-project/smspp/$n"
             brew install --build-bottle --formula "$f"

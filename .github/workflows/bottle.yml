@@ -40,9 +40,10 @@ jobs:
           HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}
         run: |
           f="smspp-project/smspp/${{ inputs.formula }}"
-          # brew taps by itself only the trusted taps, so the one of abLEMON is
-          # tapped here
+          # brew loads the formulae of a trusted tap only, so the tap of abLEMON
+          # is tapped and trusted here
           brew tap dmeoli/ablemon
+          brew trust dmeoli/ablemon
           brew install --build-bottle --formula "$f"
           brew test "$f"
           brew bottle --json --no-rebuild \
