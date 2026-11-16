@@ -41,9 +41,12 @@ jobs:
         run: |
           f="smspp-project/smspp/${{ inputs.formula }}"
           # brew loads the formulae of a trusted tap only, so the tap of abLEMON
-          # is tapped and trusted here
+          # is tapped and trusted here, and abLEMON, which has no bottle, is built
+          # from source before --build-bottle asks for the bottles of the
+          # dependencies
           brew tap dmeoli/ablemon
           brew trust dmeoli/ablemon
+          brew install --build-from-source dmeoli/ablemon/ablemon
           brew install --build-bottle --formula "$f"
           brew test "$f"
           brew bottle --json --no-rebuild \
