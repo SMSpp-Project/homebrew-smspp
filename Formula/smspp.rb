@@ -1,8 +1,8 @@
 class Smspp < Formula
   desc "Framework to model and solve block-structured optimization problems"
   homepage "https://smspp.gitlab.io/"
-  url "https://gitlab.com/api/v4/projects/smspp%2Fsmspp-project/packages/generic/smspp-project/0.7.1/smspp-project-0.7.1.tar.gz"
-  sha256 "036f4968d2bf2e8e16b29c82f65902bb1a016925aa110ccf15c55e5d44a39a12"
+  url "https://gitlab.com/api/v4/projects/smspp%2Fsmspp-project/packages/generic/smspp-project/0.8.0/smspp-project-0.8.0.tar.gz"
+  sha256 "443563acb9b864675a3ee71895d1d767ca0820a34c3c088363b440ee08034a02"
   license "LGPL-3.0-only"
 
   bottle do
