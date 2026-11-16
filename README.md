@@ -5,6 +5,7 @@ framework and of the dependencies of its modules that homebrew-core does not
 carry:
 
 ```sh
+brew tap dmeoli/ablemon
 brew tap SMSpp-Project/smspp
 brew install smspp
 ```
