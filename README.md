@@ -4,8 +4,10 @@ Homebrew formulae of the [SMS++](https://gitlab.com/smspp/smspp-project)
 framework and of the dependencies of its modules that homebrew-core does not
 carry:
 
-    brew tap SMSpp-Project/smspp
-    brew install smspp
+```sh
+brew tap SMSpp-Project/smspp
+brew install smspp
+```
 
 The keg holds the shared library of every module, the CMake configuration that
 `find_package(SMS++)` and `find_package(<Module>)` find, and every
