@@ -6,7 +6,9 @@ carry:
 
 ```sh
 brew tap dmeoli/ablemon
+brew trust dmeoli/ablemon
 brew tap SMSpp-Project/smspp
+brew trust SMSpp-Project/smspp
 brew install smspp
 ```
 
